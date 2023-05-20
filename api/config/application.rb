@@ -11,7 +11,10 @@ module Api
 #     protect_from_forgery with: :null_session
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
+
     config.action_cable.mount_path = '/websocket'
+    config.action_cable.disable_request_forgery_protection = true
+    config.action_cable.worker_pool_size = 6
 
     # Configuration for the application, engines, and railties goes here.
     #
