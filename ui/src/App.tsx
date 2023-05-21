@@ -30,6 +30,8 @@ function App() {
   const { data: newTodoItemData, loading: isLoadingNewTodoItem } =
     useSubscription(NEW_TODO_SUBSCRIPTION);
 
+  console.log("=>(App.tsx:32) newTodoItemData", newTodoItemData);
+
   if (isLoadingTodoItems || isLoadingNewTodoItem) {
     return null;
   }
@@ -42,7 +44,9 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <ul>
           {todos.map((todo: any) => (
-            <li key={todo.id}>{todo.title}</li>
+            <li key={todo.id}>
+              #{todo.id} {todo.title}
+            </li>
           ))}
         </ul>
       </header>
