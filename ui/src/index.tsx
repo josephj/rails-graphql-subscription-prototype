@@ -6,8 +6,8 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
+import ActionCable from "actioncable";
+import { ActionCableLink } from "graphql-ruby-client";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -15,17 +15,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 
+const cable = ActionCable.createConsumer("ws://localhost:3000/websocket");
+
 const httpLink = new HttpLink({
   uri: "http://localhost:3000/graphql",
 });
 
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: "ws://localhost:3000/websocket",
-  })
-);
-
-const splitLink = split(
+const link = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (
@@ -33,12 +29,12 @@ const splitLink = split(
       definition.operation === "subscription"
     );
   },
-  wsLink,
+  new ActionCableLink({ cable }),
   httpLink
 );
 
 const client = new ApolloClient({
-  link: splitLink,
+  link,
   cache: new InMemoryCache(),
 });
 
